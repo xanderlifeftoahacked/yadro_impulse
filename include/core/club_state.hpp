@@ -28,6 +28,7 @@ public:
   Time opening_time_;
   Time closing_time_;
   uint32_t hour_cost_;
+  bool closed;
 
   std::map<std::string, ClientInfo> clients_;
   std::vector<Table> tables_;

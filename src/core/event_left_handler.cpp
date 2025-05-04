@@ -4,7 +4,6 @@ void core::ClientLeftHandler::handle(const Event &event, ClubState &club,
                                      std::vector<Event> &output) {
   const auto &client = event.get_body()[0];
   const auto &time = event.get_time();
-
   if (!club.clients_.count(client)) {
     output.emplace_back(
         Event(time, EventType::ERROR_OCCURRED, {"ClientUnknown"}));

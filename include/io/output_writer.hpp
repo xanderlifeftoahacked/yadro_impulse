@@ -15,8 +15,17 @@ public:
                               std::vector<std::string>{}));
 
     for (const auto &event : events) {
-      output.push_back(event);
-      club.process_event(event, output);
+      if (event.get_time() < club.closing_time_) {
+        output.push_back(event);
+        club.process_event(event, output);
+      } else if (!club.closed) {
+        club.close(output);
+        output.push_back(event);
+        club.process_event(event, output);
+      } else {
+        club.process_event(event, output);
+        output.push_back(event);
+      }
     }
 
     club.close(output);
