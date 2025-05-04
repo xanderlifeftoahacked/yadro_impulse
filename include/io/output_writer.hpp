@@ -23,8 +23,8 @@ public:
         output.push_back(event);
         club.process_event(event, output);
       } else {
-        club.process_event(event, output);
         output.push_back(event);
+        club.process_event(event, output);
       }
     }
 
