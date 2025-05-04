@@ -5,12 +5,19 @@
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <regex>
 #include <sstream>
 
 using namespace core;
 namespace io {
 
 class InputParser {
+  static bool validate_client_name(const std::string &name) {
+    static const std::regex valid_name_regex("^[a-z0-9_\\-]+$",
+                                             std::regex::icase);
+    return std::regex_match(name, valid_name_regex);
+  }
+
   template <typename T, typename Parser, typename Validator>
   static auto parse_line(const std::string &line, size_t line_num,
                          Parser &&parser, Validator &&validator,
@@ -98,7 +105,13 @@ public:
         Event event = parse_line<Event>(
             line, line_num, [](auto &s) { return Event::from_string(s); },
             [&](auto &e) {
-              return events.empty() || e.get_time() >= prev_time;
+              std::vector<std::string> event_body = e.get_body();
+              if (event_body.size() == 2 &&
+                  std::stoi(event_body[1]) > config.num_tables_)
+                return false;
+
+              return validate_client_name(event_body[0]) &&
+                     (events.empty() || e.get_time() >= prev_time);
             },
             "Invalid event");
 

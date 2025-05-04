@@ -19,7 +19,7 @@ Event Event::from_string(const std::string &input) {
     parts.push_back(part);
   }
 
-  if (parts.size() < 2) {
+  if (parts.size() < 3 || parts.size() > 4) {
     throw std::invalid_argument("Invalid event format");
   }
 
